@@ -48,12 +48,31 @@ function! s:snippets_call_fzf(query)
 endfunction
 
 
+" Create a snippet, either empty or drawing from visual selection
+function! s:snippets_create()
+    let l:newfile = input('Enter file path: ', g:snippets_directory, 'file')
+    execute 'tabnew ' .. fnameescape(l:newfile)
+endfunction
+
+function! s:snippets_create_visual()
+    let l:selected_text = getline("'<", "'>")
+    call s:snippets_create()
+    call setline(1, l:selected_text)
+endfunction
+
+
 " User interfaces to the functions above
 command! -bang -nargs=* SnippetsFzf
     \ call s:snippets_call_fzf(<q-args>)
 
 command! -bang -nargs=* SnippetsRg
     \ call s:snippets_call_rg(<q-args>)
+
+command! -bang -nargs=* SnippetsCreate
+    \ call s:snippets_create()
+
+command! -bang -nargs=* SnippetsCreateVisual
+    \ call s:snippets_create_visual()
 
 
 " This function switches FZF<->RG while keeping the current buffered text
@@ -115,9 +134,7 @@ function! s:snippets_cb(lines, current_mode)
         call s:snippets_mode_switch(a:current_mode)
         return
     elseif l:key == 'ctrl-a'    " Edit and Add a new snippet
-        let l:newcard = input('Insert new filename (no extension): ')
-        let l:newcard = l:newcard .. g:snippets_file_extension
-        execute 'tabnew ' .. fnameescape(g:snippets_directory .. l:newcard)
+        call s:snippets_create()
         return
     endif
 
@@ -160,33 +177,12 @@ function! s:snippets_cb(lines, current_mode)
 
 endfunction
 
-
-command! -bang -nargs=* SnippetsCreate
-    \ call s:snippets_create('visual')
-
-
-function! s:snippets_create(editor_mode)
-
-    if a:editor_mode == 'visual'
-        let l:selected_text = getline("'<", "'>")
-    endif
-
-    let l:newfile = input('Enter file path: ', g:snippets_directory, 'file')
-    execute 'tabnew ' .. fnameescape(l:newfile)
-
-    if a:editor_mode == 'visual'
-        call setline(1, l:selected_text)
-    endif
-
-endfunction
-
-if mapcheck("<leader>s", "v") == "" 
-    vnoremap <leader>s :<C-u>SnippetsCreate<CR>
-endif
-
-
 " Key mapping to invoke an entrypoint, only if not being used already
 if mapcheck("<leader>s", "I") == "" 
     nnoremap <leader>s :SnippetsRg <CR>
+endif
+
+if mapcheck("<leader>s", "v") == "" 
+    vnoremap <leader>s :<C-u>SnippetsCreateVisual<CR>
 endif
 
