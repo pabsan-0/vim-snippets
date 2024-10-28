@@ -5,7 +5,6 @@ let g:snippets_plugin_path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 let g:snippets_directory = "/opt/pabsan-0/snippets/"
 let g:snippets_file_extension = '.fc'
 
-" TODO
 " These need mindful tuning, keys need to be changed somewhere else too
 let s:snippets_fzf_keys = 'tab,ctrl-a,ctrl-t,ctrl-l,ctrl-s'
 let s:snippets_fzf_hint = 'fzf/rg <tab>, add new <C-a>, on tab <C-t>/<C-l>, on winsplit <C-s>'
@@ -162,12 +161,32 @@ function! s:snippets_cb(lines, current_mode)
 endfunction
 
 
+command! -bang -nargs=* SnippetsCreate
+    \ call s:snippets_create('visual')
+
+
+function! s:snippets_create(editor_mode)
+
+    if a:editor_mode == 'visual'
+        let l:selected_text = getline("'<", "'>")
+    endif
+
+    let l:newfile = input('Enter file path: ', g:snippets_directory, 'file')
+    execute 'tabnew ' .. fnameescape(l:newfile)
+
+    if a:editor_mode == 'visual'
+        call setline(1, l:selected_text)
+    endif
+
+endfunction
+
+if mapcheck("<leader>s", "v") == "" 
+    vnoremap <leader>s :<C-u>SnippetsCreate<CR>
+endif
+
+
 " Key mapping to invoke an entrypoint, only if not being used already
 if mapcheck("<leader>s", "I") == "" 
     nnoremap <leader>s :SnippetsRg <CR>
 endif
 
-" TODO
-" if mapcheck("<leader>s", "V") == "" 
-"     xnoremap <leader>s :SnippetsNew <CR>
-" endif
