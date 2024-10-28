@@ -6,8 +6,8 @@ let g:snippets_directory = "/opt/pabsan-0/snippets/"
 let g:snippets_file_extension = '.fc'
 
 " These need mindful tuning, keys need to be changed somewhere else too
-let s:snippets_fzf_keys = 'tab,ctrl-a,ctrl-t,ctrl-l,ctrl-s'
-let s:snippets_fzf_hint = 'fzf/rg <tab>, add new <C-a>, on tab <C-t>/<C-l>, on winsplit <C-s>'
+let s:snippets_fzf_keys = 'enter,tab,ctrl-a,ctrl-t,ctrl-l,ctrl-s'
+let s:snippets_fzf_hint = 'read <CR>, fzf/rg <tab>, add new <C-a>, on tab <C-t>, on winsplit <C-s>'
 let s:snippets_echom_prefix = '[snippets.vim] '
 
 " Pre-checks: fzf installed && user-configured paths exist
@@ -50,7 +50,7 @@ endfunction
 
 " Create a snippet, either empty or drawing from visual selection
 function! s:snippets_create()
-    let l:newfile = input('Enter file path: ', g:snippets_directory, 'file')
+    let l:newfile = input(s:snippets_echom_prefix .. 'Enter path for new snippet: ', g:snippets_directory, 'file')
     execute 'tabnew ' .. fnameescape(l:newfile)
 endfunction
 
@@ -145,11 +145,11 @@ function! s:snippets_cb(lines, current_mode)
     endif
 
     if l:key == 'ctrl-t'        " Open snippet in a new Tab 
-        execute 'tabedit' g:snippets_directory .. file
+        execute 'tabedit' g:snippets_directory .. l:file
         return
 
     elseif l:key == 'ctrl-l'    " Open snippet in a new tab for Later
-        execute 'tabedit' g:snippets_directory .. file
+        execute 'tabedit' g:snippets_directory .. l:file
 		execute 'tabp'
         return
 
@@ -158,21 +158,22 @@ function! s:snippets_cb(lines, current_mode)
         let l:window_split_char = getchar()
 
         if l:window_split_char ==# 's'
-            execute 'split ' .. file
+            execute 'split ' .. l:file
         elseif l:window_split_char ==# 'v'
-            execute 'vsplit ' .. file
+            execute 'vsplit ' .. l:file
         elseif l:window_split_char ==# 'c'  
         elseif l:window_split_char == 27  "escape
             " do nothing
         else
             " default but explicit keys in source code
-            execute 'vsplit ' .. file
+            execute 'vsplit ' .. l:file
         endif
         return 
 
+    elseif l:key == 'enter'    " Read snippet into buffer
+       execute 'read ' .. l:file
+
     else
-       " Default behavior: do nothing 
-       " This is mainly a visualization app
     endif
 
 endfunction

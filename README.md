@@ -36,11 +36,10 @@ set g:snippets_directory = ~/snippets  " custom path to store your notes
 If unused, `<leader>s` will be the default entrypoint to the Snippets plugin:
 
 - In normal mode, this mapping will open a snippet search FZF interface with the following controls:
+    - `enter`: paste snippet into the current buffer.
     - `tab`: alternate ripgrep and fzf (content / card name) search.
     - `C-a`: **a**dd a new snippet.
     - `C-t`: open snippet in a new **t**ab.
-    - `C-l`: open snippet in a new tab for **l**ater.
-    - `C-s`: open snippet in a new window **s**plit. Prompts for v/s afterwards.
 - In visual mode, creates a new snippet from the current visual selection.
 
 The plugin also exposes these commands:
