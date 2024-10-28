@@ -28,23 +28,27 @@ Plug 'pabsan-0/vim-snippets'
 Set a custom path in your `.vimrc` where your snippets are to be stored and loaded from:
 
 ```
-set g:snippets_directory = ~/cards  " custom path to store your notes
+set g:snippets_directory = ~/snippets  " custom path to store your notes
 ```
 
 ## Usage 
 
-If unused, the plugin will set `<leader>s` as default entrypoint to the Snippets. 
+If unused, `<leader>s` will be the default entrypoint to the Snippets plugin:
 
-In normal mode, this mapping will open a snippet search utility. You can also call it via the slower `:SnippetsRg` and `:SnippetsFzf`. 
+- In normal mode, this mapping will open a snippet search FZF interface with the following controls:
+    - `tab`: alternate ripgrep and fzf (content / card name) search.
+    - `C-a`: **a**dd a new snippet.
+    - `C-t`: open snippet in a new **t**ab.
+    - `C-l`: open snippet in a new tab for **l**ater.
+    - `C-s`: open snippet in a new window **s**plit. Prompts for v/s afterwards.
+- In visual mode, creates a new snippet from the current visual selection.
 
-At the search window:
-- `tab`: alternate ripgrep and fzf (content / card name) search.
-- `C-a`: **a**dd a new snippet.
-- `C-t`: open snippet in a new **t**ab.
-- `C-l`: open snippet in a new tab for **l**ater.
-- `C-s`: open snippet in a new window **s**plit. Prompts for v/s afterwards.
+The plugin also exposes these commands:
 
-In visual mode, this mapping will prompt you to select a directory a filename to create a new snippet, then a new buffer will be created at that location and your selection dumped into it.
+- `SnippetsRg`: launches snippet search by file content.
+- `SnippetsFzf`: launches snippet search by file name.
+- `SnippetsCreate`: prompts for a filename and creates an empty snippet.
+- `SnippetsCreateVisual`: prompts for a filename and creates a snippet from the current selection.
 
 ## Features
 
