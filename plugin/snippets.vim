@@ -171,7 +171,7 @@ function! s:snippets_cb(lines, current_mode)
         return 
 
     elseif l:key == 'enter'    " Read snippet into buffer
-       execute 'read ' .. l:file
+       execute '.-1read ' .. l:file
 
     else
     endif
